@@ -3,292 +3,385 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Akıllı Planlayıcı |</title>
+<title>Akıllı Planlayıcı</title>
 
 <style>
-/* 1️⃣ TEMEL AYARLAR */
-html { font-size: 16px; }
-:root {
-    --bg-color: #f4f6f8;
-    --card-bg: #ffffff;
-    --text-color: #333;
-    --primary-color: #6200ea;
-    --accent-color: #4CAF50;
-    --danger-color: #f44336;
-    --input-border: #e2e8f0;
-}
-body.dark-mode {
-    --bg-color: #121212;
-    --card-bg: #1e1e1e;
-    --text-color: #e0e0e0;
-    --primary-color: #bb86fc;
-}
+* { box-sizing: border-box; }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
-    padding: 1.5rem;
-    max-width: 600px;
-    margin: auto;
-    transition: 0.3s;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
 }
 
-/* 2️⃣ KUTU VE FORM TASARIMI */
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 16px;
+}
+
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    gap: 10px;
-}
-.header h1 { font-size: 1.6rem; margin: 0; }
-
-.form-container {
-    background: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
+h1 {
+  font-size: 24px;
+  margin: 0;
 }
 
-/* Taşma Engelleyici: box-sizing */
-input, select {
-    padding: 0.85rem;
-    border-radius: 12px;
-    border: 2px solid var(--input-border);
-    background: var(--card-bg);
-    color: var(--text-color);
-    font-size: 0.95rem;
-    width: 100%;
-    box-sizing: border-box; 
+.card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row > * {
+  flex: 1;
 }
 
 button {
-    cursor: pointer;
-    font-weight: 700;
-    border: none;
-    border-radius: 12px;
-    padding: 0.85rem;
-    color: white;
-    transition: 0.2s;
-}
-button:active { transform: scale(0.97); }
-
-.btn-primary { background: var(--primary-color); }
-.btn-accent { background: var(--accent-color); }
-.btn-danger { background: var(--danger-color); }
-
-/* Filtreler */
-.filter-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-.filter-group button { background: #888; font-size: 0.9rem; }
-.filter-group button.active { background: var(--primary-color); }
-
-/* Görev Kartları */
-#taskList { list-style: none; padding: 0; }
-.task-card {
-    background: var(--card-bg);
-    padding: 1.25rem;
-    border-radius: 16px;
-    margin-bottom: 1rem;
-    border-left: 6px solid #ccc;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  cursor: pointer;
 }
 
-.task-card.highlight {
-    border: 2px solid var(--primary-color);
-    border-left-width: 6px;
+.primary {
+  background: #4CAF50;
+  color: white;
+  border: none;
 }
 
-.completed { opacity: 0.5; text-decoration: line-through; }
-
-.card-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+.gradient {
+  margin-top: 16px;
+  background: linear-gradient(90deg, purple, blue);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 16px;
 }
 
-#performance-badge {
-    background: var(--accent-color);
-    color: white;
-    padding: 0.7rem 1.3rem;
-    border-radius: 50px;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    display: inline-block;
+.filters {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
-/* 📱 MOBİL UYUM (Sihirli Dokunuş) */
-@media (max-width: 500px) {
-    .form-row, .filter-group { grid-template-columns: 1fr; }
-    .header h1 { font-size: 1.3rem; }
-    body { padding: 1rem; }
+.filters button {
+  background: #888;
+  color: white;
+  border: none;
+}
+
+.filters button.active {
+  background: purple;
+}
+
+.scoreBox {
+  margin-top: 16px;
+  padding: 14px;
+  background: #4CAF50;
+  color: white;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+li {
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.task-info {
+  flex: 1;
+}
+
+.task-actions button {
+  width: auto;
+  margin-left: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
 }
 </style>
 </head>
 <body>
 
-<div class="header">
+<div class="container">
+
+  <header class="header">
     <h1>Senin Panelin</h1>
-    <button class="btn-primary" onclick="toggleDarkMode()" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Modu Değiştir</button>
-</div>
+  </header>
 
-<div class="form-container">
-    <div class="input-group">
-        <input id="title" placeholder="Görev adı.." autocomplete="off">
-        <div class="form-row">
-            <select id="priority">
-                <option value="1">Düşük</option>
-                <option value="3" selected>Orta</option>
-                <option value="5">Yüksek</option>
-            </select>
-            <input id="duration" type="number" min="1" placeholder="Süre (dk)">
-        </div>
-        <input id="deadline" type="date">
-        <button class="btn-accent" onclick="addTask()">Listeye Ekle</button>
+  <section class="card">
+
+    <input id="taskName" type="text" placeholder="Görev adı..">
+
+    <div class="row">
+      <select id="priority">
+        <option value="1">Düşük</option>
+        <option value="2" selected>Orta</option>
+        <option value="3">Yüksek</option>
+      </select>
+
+      <input id="duration" type="number" min="1" placeholder="Süre (dk)">
     </div>
+
+    <input id="deadline" type="date">
+
+    <button id="addTask" class="primary">Listeye Ekle</button>
+
+  </section>
+
+  <button id="suggestTask" class="gradient">
+    En Mantıklı Görevi Öner
+  </button>
+
+  <div class="filters">
+    <button data-filter="all" class="active">Hepsi</button>
+    <button data-filter="today">Bugün</button>
+    <button data-filter="week">Bu Hafta</button>
+    <button data-filter="completed">Bitenler</button>
+  </div>
+
+  <div class="scoreBox">
+    Bugünkü Verimlilik Skoru: <span id="todayScore">0</span>
+  </div>
+
+  <ul id="taskList"></ul>
+
 </div>
-
-<button class="btn-primary" style="width:100%; margin-bottom:1rem;" onclick="highlightBestTask()">En Mantıklı Görevi Öner ✨</button>
-
-<div class="filter-group">
-    <button id="filter-all" onclick="setFilter('all')">Hepsi</button>
-    <button id="filter-today" onclick="setFilter('today')">Bugün</button>
-    <button id="filter-week" onclick="setFilter('week')">Bu Hafta</button>
-    <button id="filter-completed" onclick="setFilter('completed')">Bitenler</button>
-</div>
-
-<div id="performance-badge">Bugünkü Verimlilik Skoru: <span id="dailyScore">0</span></div>
-<ul id="taskList"></ul>
 
 <script>
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let currentFilter = "all";
 
-function saveTasks() { localStorage.setItem("tasks", JSON.stringify(tasks)); }
+const taskNameInput = document.getElementById("taskName");
+const priorityInput = document.getElementById("priority");
+const durationInput = document.getElementById("duration");
+const deadlineInput = document.getElementById("deadline");
+const taskList = document.getElementById("taskList");
+const todayScoreEl = document.getElementById("todayScore");
 
-function toggleDarkMode() {
-    const dark = document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", dark);
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-if(localStorage.getItem("darkMode")==="true") document.body.classList.add("dark-mode");
 
-function addTask() {
-    const title = document.getElementById("title").value.trim();
-    const duration = parseInt(document.getElementById("duration").value);
-    const deadline = document.getElementById("deadline").value;
-    const priority = parseInt(document.getElementById("priority").value);
-
-    if (!title || !deadline || !duration || duration < 1) {
-        alert("Tüm alanları doğru doldurun."); return;
-    }
-
-    tasks.push({ id: Date.now(), title, priority, duration, deadline, completed: false, completedAt: null });
-    saveTasks(); render();
-    document.getElementById("title").value=""; document.getElementById("duration").value=""; document.getElementById("deadline").value="";
+function getTodayStr() {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  return d.toISOString().split("T")[0];
 }
 
 function calculateScore(task) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const deadlineDate = new Date(task.deadline); deadlineDate.setHours(0,0,0,0);
-    const diffDays = Math.floor((deadlineDate - today)/86400000);
-    let urgency = (diffDays < 0) ? -10 : (diffDays === 0) ? 15 : (diffDays <= 3) ? 8 : (diffDays <= 7) ? 4 : 1;
-    let durationFactor = task.duration <= 30 ? 5 : 0;
-    return (task.priority * 4) + urgency + durationFactor;
+  if (task.completed) return 0;
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const deadline = new Date(task.deadline);
+  deadline.setHours(0,0,0,0);
+
+  const diffDays = Math.floor((deadline - today) / (1000*60*60*24));
+
+  // Geçmiş görevlere ceza
+  let urgency = 0;
+  if (diffDays < 0) urgency = -10;
+  else if (diffDays === 0) urgency = 20;
+  else if (diffDays <= 2) urgency = 15;
+  else if (diffDays <= 7) urgency = 8;
+  else urgency = 2;
+
+  const priorityScore = task.priority * 10;
+  const durationScore = 100 / task.duration;
+
+  return urgency + priorityScore + durationScore;
 }
 
-function highlightBestTask() {
-    let best=null; let max=-Infinity;
-    tasks.forEach(t=>{ if(!t.completed){ let s=calculateScore(t); if(s>max){ max=s; best=t; } } });
-    render(best?.id);
+function addTask() {
+  const name = taskNameInput.value.trim();
+  const priority = parseInt(priorityInput.value);
+  const duration = parseInt(durationInput.value);
+  const deadline = deadlineInput.value;
+
+  if (!name || !deadline || !duration || duration < 1) {
+    alert("Tüm alanları doğru doldur.");
+    return;
+  }
+
+  tasks.push({
+    id: Date.now(),
+    name,
+    priority,
+    duration,
+    deadline,
+    completed: false,
+    completedAt: null
+  });
+
+  saveTasks();
+  renderTasks();
+
+  taskNameInput.value = "";
+  durationInput.value = "";
+  deadlineInput.value = "";
 }
 
-function setFilter(f){ currentFilter=f; render(); }
+function toggleTask(id) {
+  const todayStr = getTodayStr();
 
-function toggleTask(id){
-    const todayStr=new Date().toISOString().split('T')[0];
-    tasks=tasks.map(t=>{
-        if(t.id===id){
-            const newComp=!t.completed;
-            return { ...t, completed:newComp, completedAt:newComp?todayStr:null };
-        }
-        return t;
-    });
-    saveTasks(); render();
-}
-
-function deleteTask(id){
-    if(confirm("Silmek istediğinize emin misiniz?")){
-        tasks=tasks.filter(t=>t.id!==id); saveTasks(); render();
+  tasks = tasks.map(t => {
+    if (t.id === id) {
+      if (!t.completed) {
+        return { ...t, completed: true, completedAt: todayStr };
+      } else {
+        return { ...t, completed: false, completedAt: null };
+      }
     }
+    return t;
+  });
+
+  saveTasks();
+  renderTasks();
 }
 
-function render(highlightId=null){
-    const list=document.getElementById("taskList");
-    list.innerHTML="";
-    const today=new Date(); today.setHours(0,0,0,0);
-
-    document.querySelectorAll('.filter-group button').forEach(btn=>btn.classList.remove("active"));
-    const active=document.getElementById(`filter-${currentFilter}`);
-    if(active) active.classList.add("active");
-
-    tasks.filter(t=>{
-        const taskDate=new Date(t.deadline); taskDate.setHours(0,0,0,0);
-        const diff=(taskDate-today)/86400000;
-        if(currentFilter==="today") return diff===0 && !t.completed;
-        if(currentFilter==="week") return diff>=0 && diff<=6 && !t.completed;
-        if(currentFilter==="completed") return t.completed;
-        return true;
-    }).forEach(t=>{
-        const li=document.createElement("li");
-        li.className=`task-card ${t.completed?'completed':''} ${t.id===highlightId?'highlight':''}`;
-        
-        const info=document.createElement("div");
-        const title=document.createElement("strong"); title.textContent=t.title;
-        const meta=document.createElement("small");
-        meta.textContent=`Skor: ${calculateScore(t)} | Süre: ${t.duration} dk | Tarih: ${t.deadline}`;
-
-        info.append(title, document.createElement("br"), meta);
-        const actions=document.createElement("div"); actions.className="card-actions";
-
-        const toggleBtn=document.createElement("button");
-        toggleBtn.className="btn-primary"; toggleBtn.textContent=t.completed?"Geri Al":"Bitir";
-        toggleBtn.onclick=()=>toggleTask(t.id);
-
-        const deleteBtn=document.createElement("button");
-        deleteBtn.className="btn-danger"; deleteBtn.textContent="Sil";
-        deleteBtn.onclick=()=>deleteTask(t.id);
-
-        actions.append(toggleBtn, deleteBtn);
-        li.append(info, actions);
-        list.appendChild(li);
-    });
-
-    const todayStr=new Date().toISOString().split('T')[0];
-    const perf=tasks.reduce((acc,t)=> (t.completed && t.completedAt===todayStr) ? acc+calculateScore(t) : acc, 0);
-    document.getElementById("dailyScore").textContent=perf;
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveTasks();
+  renderTasks();
 }
-render();
+
+function renderTasks() {
+  taskList.innerHTML = "";
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  let filtered = tasks.filter(t => {
+    const deadline = new Date(t.deadline);
+    deadline.setHours(0,0,0,0);
+    const diff = Math.floor((deadline - today) / (1000*60*60*24));
+
+    if (currentFilter === "today") return diff === 0;
+    if (currentFilter === "week") return diff >= 0 && diff <= 6;
+    if (currentFilter === "completed") return t.completed;
+    return true;
+  });
+
+  filtered.forEach(task => {
+    const li = document.createElement("li");
+    if (task.completed) li.classList.add("completed");
+
+    const info = document.createElement("div");
+    info.className = "task-info";
+    info.innerText = task.name;
+
+    const actions = document.createElement("div");
+    actions.className = "task-actions";
+
+    const completeBtn = document.createElement("button");
+    completeBtn.innerText = "✓";
+    completeBtn.onclick = () => toggleTask(task.id);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "X";
+    deleteBtn.onclick = () => deleteTask(task.id);
+
+    actions.appendChild(completeBtn);
+    actions.appendChild(deleteBtn);
+
+    li.appendChild(info);
+    li.appendChild(actions);
+
+    taskList.appendChild(li);
+  });
+
+  calculateTodayScore();
+}
+
+function calculateTodayScore() {
+  const todayStr = getTodayStr();
+  let score = 0;
+
+  tasks.forEach(task => {
+    if (task.completed && task.completedAt === todayStr) {
+      score += calculateScore(task);
+    }
+  });
+
+  todayScoreEl.innerText = score.toFixed(2);
+}
+
+function suggestTask() {
+  const activeTasks = tasks.filter(t => !t.completed);
+  if (activeTasks.length === 0) {
+    alert("Tamamlanmamış görev yok.");
+    return;
+  }
+
+  let best = activeTasks[0];
+  let bestScore = calculateScore(best);
+
+  activeTasks.forEach(task => {
+    const score = calculateScore(task);
+    if (score > bestScore) {
+      best = task;
+      bestScore = score;
+    }
+  });
+
+  alert("Önerilen görev: " + best.name);
+}
+
+document.getElementById("addTask").addEventListener("click", addTask);
+document.getElementById("suggestTask").addEventListener("click", suggestTask);
+
+document.querySelectorAll(".filters button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderTasks();
+  });
+});
+
+renderTasks();
 </script>
+
 </body>
 </html>

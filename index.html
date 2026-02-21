@@ -6,382 +6,370 @@
 <title>Akıllı Planlayıcı</title>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+html { font-size: 16px; }
+:root {
+    --bg-color: #f4f6f8;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --primary-color: #6200ea;
+    --accent-color: #4CAF50;
+    --danger-color: #f44336;
+    --input-border: #e2e8f0;
+}
+body.dark-mode {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --primary-color: #bb86fc;
 }
 
-.container {
-  max-width: 500px;
-  margin: auto;
-  padding: 16px;
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    padding: 2rem;
+    max-width: 600px;
+    margin: auto;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:1.5rem;
 }
 
-h1 {
-  font-size: 24px;
-  margin: 0;
+.form-container {
+    background:var(--card-bg);
+    padding:1.5rem;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom:1.5rem;
 }
 
-.card {
-  background: #fff;
-  padding: 16px;
-  border-radius: 16px;
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.input-group {
+    display:flex;
+    flex-direction:column;
+    gap:0.8rem;
 }
 
-input, select, button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+input, select {
+    padding:0.85rem;
+    border-radius:12px;
+    border:2px solid var(--input-border);
+    background:var(--card-bg);
+    color:var(--text-color);
+    font-size:0.95rem;
 }
 
-.row {
-  display: flex;
-  gap: 12px;
-}
-
-.row > * {
-  flex: 1;
+.form-row {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
 }
 
 button {
-  cursor: pointer;
+    cursor:pointer;
+    font-weight:700;
+    border:none;
+    border-radius:12px;
+    padding:0.85rem;
+    color:white;
 }
 
-.primary {
-  background: #4CAF50;
-  color: white;
-  border: none;
+.btn-primary { background:var(--primary-color); }
+.btn-accent { background:var(--accent-color); }
+.btn-danger { background:var(--danger-color); }
+
+.filter-group {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:1rem;
 }
 
-.gradient {
-  margin-top: 16px;
-  background: linear-gradient(90deg, purple, blue);
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 16px;
+.filter-group button { background:#888; }
+.filter-group button.active { background:var(--primary-color); }
+
+#taskList { list-style:none; padding:0; }
+
+.task-card {
+    background:var(--card-bg);
+    padding:1.25rem;
+    border-radius:16px;
+    margin-bottom:1rem;
+    border-left:6px solid #ccc;
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
 }
 
-.filters {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.task-card.highlight {
+    border:2px solid var(--primary-color);
+    border-left-width:6px;
 }
 
-.filters button {
-  background: #888;
-  color: white;
-  border: none;
+.completed {
+    opacity:0.5;
+    text-decoration:line-through;
 }
 
-.filters button.active {
-  background: purple;
+.card-actions {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
 }
 
-.scoreBox {
-  margin-top: 16px;
-  padding: 14px;
-  background: #4CAF50;
-  color: white;
-  border-radius: 12px;
-  text-align: center;
-  font-weight: bold;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 16px;
-}
-
-li {
-  background: white;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-li.completed {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.task-info {
-  flex: 1;
-}
-
-.task-actions button {
-  width: auto;
-  margin-left: 6px;
-  padding: 6px 10px;
-  font-size: 14px;
+#performance-badge {
+    background:var(--accent-color);
+    color:white;
+    padding:0.7rem 1.3rem;
+    border-radius:50px;
+    font-weight:700;
+    margin-bottom:1rem;
+    display:inline-block;
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-
-  <header class="header">
+<div class="header">
     <h1>Senin Panelin</h1>
-  </header>
-
-  <section class="card">
-
-    <input id="taskName" type="text" placeholder="Görev adı..">
-
-    <div class="row">
-      <select id="priority">
-        <option value="1">Düşük</option>
-        <option value="2" selected>Orta</option>
-        <option value="3">Yüksek</option>
-      </select>
-
-      <input id="duration" type="number" min="1" placeholder="Süre (dk)">
-    </div>
-
-    <input id="deadline" type="date">
-
-    <button id="addTask" class="primary">Listeye Ekle</button>
-
-  </section>
-
-  <button id="suggestTask" class="gradient">
-    En Mantıklı Görevi Öner
-  </button>
-
-  <div class="filters">
-    <button data-filter="all" class="active">Hepsi</button>
-    <button data-filter="today">Bugün</button>
-    <button data-filter="week">Bu Hafta</button>
-    <button data-filter="completed">Bitenler</button>
-  </div>
-
-  <div class="scoreBox">
-    Bugünkü Verimlilik Skoru: <span id="todayScore">0</span>
-  </div>
-
-  <ul id="taskList"></ul>
-
+    <button class="btn-primary" onclick="toggleDarkMode()">Modu Değiştir</button>
 </div>
+
+<div class="form-container">
+    <div class="input-group">
+        <input id="title" placeholder="Görev adı.." autocomplete="off">
+        <div class="form-row">
+            <select id="priority">
+                <option value="1">Düşük</option>
+                <option value="3" selected>Orta</option>
+                <option value="5">Yüksek</option>
+            </select>
+            <input id="duration" type="number" min="1" placeholder="Süre (dk)">
+        </div>
+        <input id="deadline" type="date">
+        <button class="btn-accent" onclick="addTask()">Listeye Ekle</button>
+    </div>
+</div>
+
+<button class="btn-primary" style="width:100%; margin-bottom:1rem;" onclick="highlightBestTask()">En Mantıklı Görevi Öner</button>
+
+<div class="filter-group">
+    <button id="filter-all" onclick="setFilter('all')">Hepsi</button>
+    <button id="filter-today" onclick="setFilter('today')">Bugün</button>
+    <button id="filter-week" onclick="setFilter('week')">Bu Hafta</button>
+    <button id="filter-completed" onclick="setFilter('completed')">Bitenler</button>
+</div>
+
+<div id="performance-badge">
+    Bugünkü Verimlilik Skoru:
+    <span id="dailyScore">0</span>
+</div>
+
+<ul id="taskList"></ul>
 
 <script>
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let currentFilter = "all";
 
-const taskNameInput = document.getElementById("taskName");
-const priorityInput = document.getElementById("priority");
-const durationInput = document.getElementById("duration");
-const deadlineInput = document.getElementById("deadline");
-const taskList = document.getElementById("taskList");
-const todayScoreEl = document.getElementById("todayScore");
-
 function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function getTodayStr() {
-  const d = new Date();
-  d.setHours(0,0,0,0);
-  return d.toISOString().split("T")[0];
+function toggleDarkMode() {
+    const dark = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", dark);
 }
-
-function calculateScore(task) {
-  if (task.completed) return 0;
-
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const deadline = new Date(task.deadline);
-  deadline.setHours(0,0,0,0);
-
-  const diffDays = Math.floor((deadline - today) / (1000*60*60*24));
-
-  // Geçmiş görevlere ceza
-  let urgency = 0;
-  if (diffDays < 0) urgency = -10;
-  else if (diffDays === 0) urgency = 20;
-  else if (diffDays <= 2) urgency = 15;
-  else if (diffDays <= 7) urgency = 8;
-  else urgency = 2;
-
-  const priorityScore = task.priority * 10;
-  const durationScore = 100 / task.duration;
-
-  return urgency + priorityScore + durationScore;
+if(localStorage.getItem("darkMode")==="true") {
+    document.body.classList.add("dark-mode");
 }
 
 function addTask() {
-  const name = taskNameInput.value.trim();
-  const priority = parseInt(priorityInput.value);
-  const duration = parseInt(durationInput.value);
-  const deadline = deadlineInput.value;
+    const title = document.getElementById("title").value.trim();
+    const duration = parseInt(document.getElementById("duration").value);
+    const deadline = document.getElementById("deadline").value;
+    const priority = parseInt(document.getElementById("priority").value);
 
-  if (!name || !deadline || !duration || duration < 1) {
-    alert("Tüm alanları doğru doldur.");
-    return;
-  }
-
-  tasks.push({
-    id: Date.now(),
-    name,
-    priority,
-    duration,
-    deadline,
-    completed: false,
-    completedAt: null
-  });
-
-  saveTasks();
-  renderTasks();
-
-  taskNameInput.value = "";
-  durationInput.value = "";
-  deadlineInput.value = "";
-}
-
-function toggleTask(id) {
-  const todayStr = getTodayStr();
-
-  tasks = tasks.map(t => {
-    if (t.id === id) {
-      if (!t.completed) {
-        return { ...t, completed: true, completedAt: todayStr };
-      } else {
-        return { ...t, completed: false, completedAt: null };
-      }
+    if (!title || !deadline || !duration || duration < 1) {
+        alert("Tüm alanları doğru doldurun. Süre minimum 1 dakika olmalı.");
+        return;
     }
-    return t;
-  });
 
-  saveTasks();
-  renderTasks();
+    tasks.push({
+        id: Date.now(),
+        title,
+        priority,
+        duration,
+        deadline,
+        completed:false,
+        completedAt:null
+    });
+
+    saveTasks();
+    render();
+
+    document.getElementById("title").value="";
+    document.getElementById("duration").value="";
+    document.getElementById("deadline").value="";
 }
 
-function deleteTask(id) {
-  tasks = tasks.filter(t => t.id !== id);
-  saveTasks();
-  renderTasks();
-}
+function calculateScore(task) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
 
-function renderTasks() {
-  taskList.innerHTML = "";
+    const deadlineDate = new Date(task.deadline);
+    deadlineDate.setHours(0,0,0,0);
 
-  const today = new Date();
-  today.setHours(0,0,0,0);
+    const diffDays = Math.floor((deadlineDate - today)/86400000);
 
-  let filtered = tasks.filter(t => {
-    const deadline = new Date(t.deadline);
-    deadline.setHours(0,0,0,0);
-    const diff = Math.floor((deadline - today) / (1000*60*60*24));
+    let urgency;
 
-    if (currentFilter === "today") return diff === 0;
-    if (currentFilter === "week") return diff >= 0 && diff <= 6;
-    if (currentFilter === "completed") return t.completed;
-    return true;
-  });
-
-  filtered.forEach(task => {
-    const li = document.createElement("li");
-    if (task.completed) li.classList.add("completed");
-
-    const info = document.createElement("div");
-    info.className = "task-info";
-    info.innerText = task.name;
-
-    const actions = document.createElement("div");
-    actions.className = "task-actions";
-
-    const completeBtn = document.createElement("button");
-    completeBtn.innerText = "✓";
-    completeBtn.onclick = () => toggleTask(task.id);
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.innerText = "X";
-    deleteBtn.onclick = () => deleteTask(task.id);
-
-    actions.appendChild(completeBtn);
-    actions.appendChild(deleteBtn);
-
-    li.appendChild(info);
-    li.appendChild(actions);
-
-    taskList.appendChild(li);
-  });
-
-  calculateTodayScore();
-}
-
-function calculateTodayScore() {
-  const todayStr = getTodayStr();
-  let score = 0;
-
-  tasks.forEach(task => {
-    if (task.completed && task.completedAt === todayStr) {
-      score += calculateScore(task);
+    if (diffDays < 0) {
+        urgency = -10; // geçmiş görev ceza
+    } else if (diffDays === 0) {
+        urgency = 15;
+    } else if (diffDays <= 3) {
+        urgency = 8;
+    } else if (diffDays <= 7) {
+        urgency = 4;
+    } else {
+        urgency = 1;
     }
-  });
 
-  todayScoreEl.innerText = score.toFixed(2);
+    let durationFactor = task.duration <= 30 ? 5 : 0;
+
+    return (task.priority * 4) + urgency + durationFactor;
 }
 
-function suggestTask() {
-  const activeTasks = tasks.filter(t => !t.completed);
-  if (activeTasks.length === 0) {
-    alert("Tamamlanmamış görev yok.");
-    return;
-  }
+function highlightBestTask() {
+    let best=null;
+    let max=-Infinity;
 
-  let best = activeTasks[0];
-  let bestScore = calculateScore(best);
+    tasks.forEach(t=>{
+        if(!t.completed){
+            let s=calculateScore(t);
+            if(s>max){
+                max=s;
+                best=t;
+            }
+        }
+    });
 
-  activeTasks.forEach(task => {
-    const score = calculateScore(task);
-    if (score > bestScore) {
-      best = task;
-      bestScore = score;
+    render(best?.id);
+}
+
+function setFilter(f){
+    currentFilter=f;
+    render();
+}
+
+function toggleTask(id){
+    const todayStr=new Date().toISOString().split('T')[0];
+
+    tasks=tasks.map(t=>{
+        if(t.id===id){
+            const newCompleted=!t.completed;
+            return {
+                ...t,
+                completed:newCompleted,
+                completedAt:newCompleted?todayStr:null
+            };
+        }
+        return t;
+    });
+
+    saveTasks();
+    render();
+}
+
+function deleteTask(id){
+    if(confirm("Silmek istediğinize emin misiniz?")){
+        tasks=tasks.filter(t=>t.id!==id);
+        saveTasks();
+        render();
     }
-  });
-
-  alert("Önerilen görev: " + best.name);
 }
 
-document.getElementById("addTask").addEventListener("click", addTask);
-document.getElementById("suggestTask").addEventListener("click", suggestTask);
+function render(highlightId=null){
+    const list=document.getElementById("taskList");
+    list.innerHTML="";
 
-document.querySelectorAll(".filters button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter = btn.dataset.filter;
-    renderTasks();
-  });
-});
+    const today=new Date();
+    today.setHours(0,0,0,0);
 
-renderTasks();
+    document.querySelectorAll('.filter-group button')
+        .forEach(btn=>btn.classList.remove("active"));
+    const active=document.getElementById(`filter-${currentFilter}`);
+    if(active) active.classList.add("active");
+
+    tasks.filter(t=>{
+        const taskDate=new Date(t.deadline);
+        taskDate.setHours(0,0,0,0);
+
+        const diff=(taskDate-today)/86400000;
+
+        if(currentFilter==="today")
+            return diff===0 && !t.completed;
+
+        if(currentFilter==="week")
+            return diff>=0 && diff<=6 && !t.completed;
+
+        if(currentFilter==="completed")
+            return t.completed;
+
+        return true;
+    })
+    .forEach(t=>{
+        const li=document.createElement("li");
+        li.className=`task-card ${t.completed?'completed':''} ${t.id===highlightId?'highlight':''}`;
+
+        const info=document.createElement("div");
+
+        const title=document.createElement("strong");
+        title.textContent=t.title;
+
+        const meta=document.createElement("small");
+        meta.textContent=`Skor: ${calculateScore(t)} | Süre: ${t.duration} dk | Tarih: ${t.deadline}`;
+
+        info.appendChild(title);
+        info.appendChild(document.createElement("br"));
+        info.appendChild(meta);
+
+        const actions=document.createElement("div");
+        actions.className="card-actions";
+
+        const toggleBtn=document.createElement("button");
+        toggleBtn.className="btn-primary";
+        toggleBtn.textContent=t.completed?"Geri Al":"Bitir";
+        toggleBtn.onclick=()=>toggleTask(t.id);
+
+        const deleteBtn=document.createElement("button");
+        deleteBtn.className="btn-danger";
+        deleteBtn.textContent="Sil";
+        deleteBtn.onclick=()=>deleteTask(t.id);
+
+        actions.appendChild(toggleBtn);
+        actions.appendChild(deleteBtn);
+
+        li.appendChild(info);
+        li.appendChild(actions);
+        list.appendChild(li);
+    });
+
+    const todayStr=new Date().toISOString().split('T')[0];
+
+    const perf=tasks.reduce((acc,t)=>{
+        if(t.completed && t.completedAt===todayStr)
+            return acc+calculateScore(t);
+        return acc;
+    },0);
+
+    document.getElementById("dailyScore").textContent=perf;
+}
+
+render();
 </script>
-
 </body>
 </html>
